@@ -13,6 +13,11 @@ module.exports = function(eleventyConfig) {
     return Date.now();
   });
 
+  // Current year, so the footer copyright never goes stale
+  eleventyConfig.addShortcode("year", () => {
+    return String(new Date().getFullYear());
+  });
+
   return {
     dir: {
       input: "src",

@@ -5,13 +5,51 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{{ title or site.title }}</title>
   <meta name="description" content="{{ description or site.description }}">
+  <link rel="icon" href="/images/favicon.png" type="image/png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&amp;family=Noto+Sans+Sinhala:wght@400;600;700&amp;display=swap">
   <link rel="stylesheet" href="/css/style.css?v={{ buildTimestamp }}">
 </head>
 <body>
+  {% include "topbar.njk" %}
+
   <main class="container">
     {{ content | safe }}
   </main>
 
   {% include "nav.njk" %}
+
+  <script>
+    // Highlight the section-nav link for whichever section is in view.
+    (function () {
+      var nav = document.querySelector(".section-nav");
+      if (!nav || !("IntersectionObserver" in window)) return;
+
+      var links = {};
+      Array.prototype.forEach.call(nav.querySelectorAll("a[href^='#']"), function (a) {
+        links[a.getAttribute("href").slice(1)] = a;
+      });
+
+      var sections = Object.keys(links)
+        .map(function (id) { return document.getElementById(id); })
+        .filter(Boolean);
+      if (!sections.length) return;
+
+      var visible = {};
+      var observer = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          visible[entry.target.id] = entry.isIntersecting;
+        });
+
+        var current = sections.filter(function (s) { return visible[s.id]; })[0];
+        Object.keys(links).forEach(function (id) {
+          links[id].classList.toggle("active", !!current && id === current.id);
+        });
+      }, { rootMargin: "-20% 0px -70% 0px" });
+
+      sections.forEach(function (s) { observer.observe(s); });
+    })();
+  </script>
 </body>
 </html>

@@ -1,5 +1,10 @@
-/* Import Sinhala Font Support */
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Sinhala:wght@400;600;700&display=swap');
+/* Fonts are loaded via <link> in base.njk rather than @import so they do
+   not block CSS parsing.
+
+   Noto Sans Sinhala must stay OUT of the global stack: it carries Latin
+   glyphs too, so listing it globally means it renders all Latin text on
+   any machine that reaches it in the cascade. Inter handles Latin at
+   every weight; Noto is scoped to [lang="si"] for the Sinhala script. */
 
 /* CSS Reset and Variables */
 :root {
@@ -25,10 +30,15 @@ html {
     font-size: 16px;
 }
 
+/* Sinhala script only — never the global stack, see note above */
+[lang="si"] {
+    font-family: "Noto Sans Sinhala", sans-serif;
+}
+
 body {
     font-family:
-        -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu,
-        Cantarell, "Noto Sans Sinhala", sans-serif;
+        "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+        Ubuntu, Cantarell, sans-serif;
     background-color: var(--bg-color);
     color: var(--text-color);
     line-height: 1.6;
@@ -40,9 +50,13 @@ body {
 /* Container */
 .container {
     max-width: var(--max-width);
+    width: 100%;
     margin: 0 auto;
     padding: 0 var(--spacing-md) 4rem;
     flex: 1;
+    /* Prevents a wide child (e.g. the scrollable section nav)
+       from stretching the page and causing horizontal scroll */
+    min-width: 0;
 }
 
 /* Logo Section */
@@ -185,6 +199,277 @@ body {
     color: var(--hover-color);
 }
 
+/* Top bar */
+.topbar {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background-color: var(--bg-color);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.topbar-inner {
+    max-width: var(--max-width);
+    margin: 0 auto;
+    padding: 0.875rem var(--spacing-md);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--spacing-sm);
+}
+
+.topbar-brand {
+    font-family: "Courier New", monospace;
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    text-decoration: none;
+    color: var(--text-color);
+}
+
+.topbar-nav {
+    display: flex;
+    gap: var(--spacing-md);
+}
+
+.topbar-nav a {
+    font-family: "Courier New", monospace;
+    font-size: 0.875rem;
+    color: var(--text-muted);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.topbar-nav a:hover,
+.topbar-nav a[aria-current="page"] {
+    color: var(--hover-color);
+}
+
+/* Masthead logo, shared by every page */
+.masthead-logo {
+    display: inline-block;
+}
+
+.masthead-logo-image {
+    width: clamp(200px, 13vw, 250px);
+    height: auto;
+    display: block;
+    margin: 0 auto;
+}
+
+/* Hero */
+.hero {
+    text-align: center;
+    max-width: 640px;
+    margin: 0 auto clamp(3rem, 6vw, 4.5rem);
+}
+
+.hero-heading {
+    font-size: clamp(2rem, 5vw, 3rem);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    line-height: 1.15;
+    margin-bottom: 1.25rem;
+}
+
+.hero-copy {
+    font-size: 1.25rem;
+    color: var(--text-muted);
+    line-height: 1.7;
+    margin-bottom: var(--spacing-md);
+}
+
+.hero-cta {
+    margin-top: var(--spacing-md);
+}
+
+/* Button */
+.button {
+    display: inline-block;
+    padding: 0.75rem 1.75rem;
+    border: 1px solid var(--text-color);
+    border-radius: 2px;
+    color: var(--text-color);
+    text-decoration: none;
+    font-size: 0.9375rem;
+    letter-spacing: 0.02em;
+    transition:
+        background-color 0.3s ease,
+        color 0.3s ease,
+        border-color 0.3s ease;
+}
+
+.button:hover {
+    background-color: var(--text-color);
+    border-color: var(--text-color);
+    color: var(--bg-color);
+}
+
+/* Filled variant for primary calls to action */
+.button.primary {
+    background-color: var(--text-color);
+    color: var(--bg-color);
+}
+
+.button.primary:hover {
+    background-color: transparent;
+    color: var(--text-color);
+}
+
+/* Section anchor navigation */
+.section-nav {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--spacing-md);
+    padding: var(--spacing-sm) 0;
+    border-top: 1px solid var(--border-color);
+    border-bottom: 1px solid var(--border-color);
+    margin-bottom: clamp(3rem, 6vw, 4.5rem);
+    font-family: "Courier New", monospace;
+}
+
+.section-nav a {
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 0.875rem;
+    transition: color 0.3s ease;
+}
+
+.section-nav a:hover,
+.section-nav a.active {
+    color: var(--text-color);
+}
+
+/* Content sections with section labels */
+.section {
+    margin-bottom: clamp(3.5rem, 7vw, 5.5rem);
+    /* Clears the sticky top bar when jumping to an anchor */
+    scroll-margin-top: 5rem;
+}
+
+.section-label {
+    font-family: "Courier New", monospace;
+    font-size: 0.8125rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+    margin-bottom: 0.75rem;
+}
+
+.section-heading {
+    font-size: clamp(1.5rem, 3.5vw, 2rem);
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    margin-bottom: var(--spacing-sm);
+}
+
+.section-body p {
+    font-size: 1.125rem;
+    line-height: 1.8;
+    margin-bottom: 1.25rem;
+    max-width: 640px;
+}
+
+/* Capability card grid. Fixed two columns keeps the last-child
+   row-span rule below predictable. */
+.capabilities {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--spacing-md);
+    margin-top: var(--spacing-md);
+}
+
+.capability {
+    display: flex;
+    flex-direction: column;
+    padding-top: var(--spacing-sm);
+    border-top: 1px solid var(--border-color);
+}
+
+/* 1rem sits clearly between the 1.125rem section body above and the
+   0.9375rem card copy below, so the three tiers stay distinct. The
+   slight negative tracking matches the h1/h2 scale, scaled down
+   because small text needs far less of it than display sizes.
+   min-height reserves two lines so body copy shares a baseline
+   across columns even when one heading wraps. */
+.capability h3 {
+    font-size: 1rem;
+    font-weight: 600;
+    letter-spacing: -0.005em;
+    margin-bottom: 0.5rem;
+    min-height: calc(2 * 1.2em);
+}
+
+/* 1.5 against the 1.8 used for prose: a deliberate density step that
+   marks card copy as a sub-component rather than narrative text. */
+.capability p {
+    font-size: 0.9375rem;
+    color: var(--text-muted);
+    line-height: 1.5;
+}
+
+/* With an odd card count the last one would leave a gap beside it,
+   so let it span the full row instead */
+.capabilities > .capability:last-child:nth-child(odd) {
+    grid-column: 1 / -1;
+}
+
+.capabilities > .capability:last-child:nth-child(odd) p {
+    max-width: 640px;
+}
+
+/* Closing CTA section */
+.section.closing {
+    text-align: center;
+    padding-top: var(--spacing-lg);
+    border-top: 1px solid var(--border-color);
+}
+
+.section.closing .section-body p {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Contact page */
+.contact-line {
+    margin-top: 1.25rem;
+}
+
+/* Numbered principles on the About page */
+.principle {
+    display: flex;
+    align-items: baseline;
+    gap: 0.75rem;
+    padding-top: var(--spacing-sm);
+    border-top: 1px solid var(--border-color);
+    margin-bottom: 0.75rem;
+    scroll-margin-top: 5rem;
+}
+
+.principle-mark {
+    font-family: "Courier New", monospace;
+    font-size: 0.8125rem;
+    font-weight: 400;
+    color: var(--hover-color);
+    flex-shrink: 0;
+}
+
+/* Footer base row */
+.footer-base {
+    max-width: var(--max-width);
+    margin: var(--spacing-md) auto 0;
+    padding-top: var(--spacing-sm);
+    border-top: 1px solid var(--border-color);
+}
+
+.footer-copyright {
+    font-family: "Courier New", monospace;
+    font-size: 0.8125rem;
+    color: var(--text-muted);
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
     :root {
@@ -220,6 +505,61 @@ body {
     .nav {
         grid-template-columns: 1fr;
         gap: var(--spacing-md);
+    }
+
+    .topbar-inner {
+        padding: 0.75rem var(--spacing-sm);
+    }
+
+    .topbar-nav {
+        gap: var(--spacing-sm);
+    }
+
+    /* Narrower measure so the headline breaks after "AI systems"
+       rather than stranding "ship." on its own line */
+    .hero-heading {
+        max-width: 15ch;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .hero-copy {
+        font-size: 1.0625rem;
+    }
+
+    /* Keep all four marks on one line, scrollable if needed,
+       instead of wrapping to a ragged second row. min-width lets the
+       nav shrink below its content width so it scrolls internally
+       rather than widening the page. */
+    .section-nav {
+        gap: var(--spacing-md);
+        flex-wrap: nowrap;
+        justify-content: flex-start;
+        overflow-x: auto;
+        scrollbar-width: none;
+        min-width: 0;
+    }
+
+    .section-nav::-webkit-scrollbar {
+        display: none;
+    }
+
+    .section-nav a {
+        white-space: nowrap;
+    }
+
+    .section-body p {
+        font-size: 1rem;
+    }
+
+    .capabilities {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-sm);
+    }
+
+    /* Single column: no need to reserve a second heading line */
+    .capability h3 {
+        min-height: 0;
     }
 }
 

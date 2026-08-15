@@ -1,0 +1,9 @@
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="topbar-brand" href="/">{{ site.title }}</a>
+    <nav class="topbar-nav" aria-label="Main">
+      <a href="/about"{% if page.url == "/about/" %} aria-current="page"{% endif %}>About</a>
+      <a href="/contact"{% if page.url == "/contact/" %} aria-current="page"{% endif %}>Contact</a>
+    </nav>
+  </div>
+</header>

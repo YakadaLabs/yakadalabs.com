@@ -2,17 +2,34 @@
   <nav class="nav">
 
     <div class="nav-section">
-      <h3 class="nav-title">Home</h3>
+      <h3 class="nav-title">Company</h3>
       <ul class="nav-list">
         <li><a href="/">Home</a></li>
+        <li><a href="/about">About</a></li>
+        <li><a href="/about#principles">Principles</a></li>
       </ul>
     </div>
 
     <div class="nav-section">
-      <h3 class="nav-title">About</h3>
+      <h3 class="nav-title">Work</h3>
       <ul class="nav-list">
-        <li><a href="/about">Company</a></li>
+        <li><a href="/#work">What We Build</a></li>
+        <li><a href="/#problem">The Problem</a></li>
+        <li><a href="/contact#engagements">Engagements</a></li>
       </ul>
     </div>
-</nav>
+
+    <div class="nav-section">
+      <h3 class="nav-title">Contact</h3>
+      <ul class="nav-list">
+        <li><a href="mailto:info@yakadalabs.com">info@yakadalabs.com</a></li>
+        <li><a href="/contact#careers">Careers</a></li>
+      </ul>
+    </div>
+
+  </nav>
+
+  <div class="footer-base">
+    <p class="footer-copyright">&copy; {{ site.startYear }}&ndash;{% year %} {{ site.title }}</p>
+  </div>
 </footer>
